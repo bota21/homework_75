@@ -1,50 +1,76 @@
-import { Grid, IconButton, TextField } from '@material-ui/core';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import './Main.css';
+import { Grid, TextField } from "@material-ui/core";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import "./Main.css";
+import {
+  requestDataDecode,
+  requestDataEncode,
+  sendDecode,
+  sendEncode,
+} from "../../store/actions";
+import FormDecode from "../../components/FormDecode/FormDecode";
+import FormEncode from "../../components/FormEncode/FormEncode";
 
 const Main = () => {
+  const dispatch = useDispatch();
+  const decode = useSelector((state) => state.decode);
+  const encode = useSelector((state) => state.encode);
+  const [inputValue, setInputValue] = useState([]);
+  const password = "t";
+
+  const changeValue = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setInputValue({ ...inputValue, [name]: value });
+  };
+
+  const submitDecode = (e) => {
+    e.preventDefalt();
+    if (inputValue.password === password) {
+      const data = { decode: inputValue.decode };
+      dispatch(sendDecode(data));
+      dispatch(requestDataEncode());
+    }
+  };
+
+  const submitEncode = (e) => {
+    e.preventDefalt();
+    if (inputValue.password === password) {
+      const data = { encode: inputValue.encode };
+      dispatch(sendEncode(data));
+      dispatch(requestDataDecode());
+    }
+  };
+
   return (
-    <form>
-    <div className="main">
-     <Grid container alignItems='center' direction='column' spacing={2}>
-       <Grid item>
-       <TextField
-          id="decoded"
-          label="Decoded message"
-          multiline
-          rows={4}
-          variant="outlined"
+    <div className='main'>
+      <Grid container alignItems='center' direction='column' spacing={2}>
+        <FormDecode
+          submit={submitDecode}
+          label='Decode'
+          value={decode.text}
+          change={changeValue}
         />
-       </Grid>
-       <Grid item>
-         <IconButton>
-           <ArrowDownwardIcon/>
-         </IconButton>
-       <TextField
-          id="filled-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          variant="filled"
+        <Grid item>
+          <TextField
+            id='filled-password-input'
+            label='Password'
+            type='password'
+            autoComplete='current-password'
+            variant='filled'
+            name='password'
+            onChange={changeValue}
+          />
+        </Grid>
+        <FormEncode
+          submit={submitEncode}
+          label='Encode'
+          value={encode.text}
+          change={changeValue}
         />
-        <IconButton>
-          <ArrowUpwardIcon/>
-        </IconButton>
-       </Grid>
-       <Grid item>
-       <TextField
-          id="encoded"
-          label="Encoded message"
-          multiline
-          rows={4}
-          variant="outlined"
-        />
-       </Grid>
-     </Grid>
+      </Grid>
     </div>
-    </form>
   );
-}
+};
 
 export default Main;
