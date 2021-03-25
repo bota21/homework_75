@@ -53,7 +53,8 @@ export const requestDataEncode = () => {
     return async (dispatch) => {
         try {
           dispatch(fetchData());
-          await axios.post("/decode", data);
+          const res = await axios.post("/decode", data);
+          console.log(res);
           dispatch(postDataDecode());
         } catch (e) {
           dispatch(fetchDataError(e));
@@ -64,7 +65,8 @@ export const requestDataEncode = () => {
     return async (dispatch) => {
         try {
           dispatch(fetchData());
-          await axios.post("/encode", data);
+          const res = await axios.post("/encode", data);
+          console.log(res);
           dispatch(postDataEncode());
         } catch (e) {
           dispatch(fetchDataError(e));

@@ -46,8 +46,7 @@ const Main = () => {
     <div className='main'>
       <Grid container alignItems='center' direction='column' spacing={2}>
         <FormDecode
-          submit={submitDecode}
-          label='Decode'
+          submit={e=>submitDecode(e)}
           value={decode.text}
           change={changeValue}
         />
@@ -63,8 +62,7 @@ const Main = () => {
           />
         </Grid>
         <FormEncode
-          submit={submitEncode}
-          label='Encode'
+          submit={e=>submitEncode(e)}
           value={encode.text}
           change={changeValue}
         />

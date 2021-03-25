@@ -11,22 +11,23 @@ const initialState = {
   decode: [],
   encode: [],
   error: null,
+  loading: false
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_DATA:
-      return { ...state };
+      return { ...state, loading: true };
     case FETCH_DATA_ERROR:
-      return { ...state, error: action.error };
+      return { ...state, error: action.error, loading: false };
     case FETCH_DATA_DECODE:
-      return { ...state, decode: action.data };
+      return { ...state, decode: action.data, loading: false };
     case FETCH_DATA_ENCODE:
-      return { ...state, encode: action.data };
+      return { ...state, encode: action.data, loading: false };
     case POST_DATA_ENCODE:
-        return {...state};
+        return {...state, loading: false};
     case POST_DATA_DECODE:
-        return {...state};
+        return {...state, loading: false};
     default:
       return state;
   }
