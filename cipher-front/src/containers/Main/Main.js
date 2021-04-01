@@ -25,7 +25,7 @@ const Main = () => {
   };
 
   const submitDecode = (e) => {
-    e.preventDefalt();
+    e.preventDefault();
     if (inputValue.password === password) {
       const data = { decode: inputValue.decode };
       dispatch(sendDecode(data));
@@ -46,7 +46,7 @@ const Main = () => {
     <div className='main'>
       <Grid container alignItems='center' direction='column' spacing={2}>
         <FormDecode
-          submit={e=>submitDecode(e)}
+          submit={submitDecode}
           value={decode.text}
           change={changeValue}
         />
@@ -62,7 +62,7 @@ const Main = () => {
           />
         </Grid>
         <FormEncode
-          submit={e=>submitEncode(e)}
+          submit={submitEncode}
           value={encode.text}
           change={changeValue}
         />
