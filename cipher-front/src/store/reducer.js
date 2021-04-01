@@ -1,17 +1,17 @@
 import {
   FETCH_DATA,
-  FETCH_DATA_DECODE,
   FETCH_DATA_ERROR,
-  FETCH_DATA_ENCODE,
   POST_DATA_ENCODE,
   POST_DATA_DECODE,
+  CHANGE_ENCODE,
+  CHANGE_DECODE,
 } from "./actionTypes";
 
 const initialState = {
-  decode: [],
-  encode: [],
+  decode: "",
+  encode: "",
   error: null,
-  loading: false
+  loading: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -20,14 +20,14 @@ const reducer = (state = initialState, action) => {
       return { ...state, loading: true };
     case FETCH_DATA_ERROR:
       return { ...state, error: action.error, loading: false };
-    case FETCH_DATA_DECODE:
-      return { ...state, decode: action.data, loading: false };
-    case FETCH_DATA_ENCODE:
-      return { ...state, encode: action.data, loading: false };
     case POST_DATA_ENCODE:
-        return {...state, loading: false};
+      return { ...state, loading: false, decode: action.data };
     case POST_DATA_DECODE:
-        return {...state, loading: false};
+      return { ...state, loading: false, encode: action.data };
+    case CHANGE_ENCODE:
+      return { ...state, encode: action.value };
+    case CHANGE_DECODE:
+      return { ...state, decode: action.value };
     default:
       return state;
   }

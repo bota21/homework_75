@@ -1,71 +1,77 @@
-import { Grid, TextField } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import "./Main.css";
 import {
-  requestDataDecode,
-  requestDataEncode,
+  changeDecode,
+  changeEncode,
   sendDecode,
   sendEncode,
 } from "../../store/actions";
-import FormDecode from "../../components/FormDecode/FormDecode";
-import FormEncode from "../../components/FormEncode/FormEncode";
+import FormCipher from "../../components/FormCipher";
+import Spinner from "../../UI/Spinner/Spinner";
+import FormPassword from "../../components/FormPassword";
 
 const Main = () => {
   const dispatch = useDispatch();
   const decode = useSelector((state) => state.decode);
   const encode = useSelector((state) => state.encode);
-  const [inputValue, setInputValue] = useState([]);
-  const password = "t";
+  const loading = useSelector((state) => state.loading);
+  const [state, setState] = useState("");
 
   const changeValue = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setInputValue({ ...inputValue, [name]: value });
+    setState({ ...state, [name]: value });
+  };
+
+  const changeDecodeValue = (e) => {
+    dispatch(changeDecode(e.target.value));
+  };
+
+  const changeEncodeValue = (e) => {
+    dispatch(changeEncode(e.target.value));
   };
 
   const submitDecode = (e) => {
     e.preventDefault();
-    if (inputValue.password === password) {
-      const data = { decode: inputValue.decode };
-      dispatch(sendDecode(data));
-      dispatch(requestDataEncode());
-    }
+    const data = {
+      password: state.password,
+      message: decode,
+    };
+    dispatch(sendDecode(data));
   };
 
   const submitEncode = (e) => {
-    e.preventDefalt();
-    if (inputValue.password === password) {
-      const data = { encode: inputValue.encode };
-      dispatch(sendEncode(data));
-      dispatch(requestDataDecode());
-    }
+    e.preventDefault();
+    const data = {
+      password: state.password,
+      message: encode,
+    };
+    dispatch(sendEncode(data));
   };
 
   return (
     <div className='main'>
+      {loading ? <Spinner /> : null}
       <Grid container alignItems='center' direction='column' spacing={2}>
-        <FormDecode
+        <FormCipher
+          label='Decode message'
           submit={submitDecode}
-          value={decode.text}
-          change={changeValue}
-        />
-        <Grid item>
-          <TextField
-            id='filled-password-input'
-            label='Password'
-            type='password'
-            autoComplete='current-password'
-            variant='filled'
-            name='password'
-            onChange={changeValue}
-          />
-        </Grid>
-        <FormEncode
+          value={decode}
+          change={changeDecodeValue}>
+          <ArrowDownwardIcon />
+        </FormCipher>
+        <FormPassword change={changeValue} />
+        <FormCipher
+          label='Encode message'
           submit={submitEncode}
-          value={encode.text}
-          change={changeValue}
-        />
+          value={encode}
+          change={changeEncodeValue}>
+          <ArrowUpwardIcon />
+        </FormCipher>
       </Grid>
     </div>
   );
